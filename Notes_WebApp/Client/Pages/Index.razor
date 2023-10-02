@@ -24,11 +24,11 @@
 <div class="mt-4">
     <h2>Search Notes</h2>
     <div class="dropdown-container">
-        <input type="text" class="form-control" placeholder="Search by Title" @bind="searchTerm" @oninput="UpdateSearchTerm" />
+        <input type="text" class="form-control" placeholder="Search by Title or Content" @bind="searchTerm" @oninput="HandleSearchInput" />
         <ul class="dropdown-content" style="@displayStyle">
             @foreach (var note in filteredNotes)
             {
-                <li @onclick="() => SelectNoteTitle(note)">@note.Title</li>
+                <li @onclick="() => SelectNoteTitleOrContent(note)">@note.Title - @note.Content</li>
             }
         </ul>
     </div>
@@ -144,14 +144,19 @@ else
 
     private List<string> noteTitles = new List<string>();
     private List<Note> filteredNotes = new List<Note>();
-    // private List<string> filteredNotes = new List<string>();
 
     bool show;
     private string displayStyle = "display: none;";
 
-    private async Task UpdateSearchTerm(ChangeEventArgs e)
+    private async Task HandleSearchInput(ChangeEventArgs e)
     {
         searchTerm = e.Value?.ToString();
+        await SearchNotes();
+    }
+
+    private async Task UpdateSearchTerm(string searchTerm)
+    {
+        this.searchTerm = searchTerm;
         await SearchNotes();
     }
 
@@ -159,20 +164,18 @@ else
     {
         filteredNotes = notes
             .Where(note =>
-                note.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                note.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                note.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
-        if (filteredNotes.Count > 0)
-        {
-            displayStyle = "display: block;";
-        }
-        else
-        {
-            displayStyle = "display: none;";
-        }
+        displayStyle = filteredNotes.Any() ? "display: block;" : "display: none;";
     }
 
-
+    private void SelectNoteTitleOrContent(Note selectedNote)
+    {
+        searchTerm = selectedNote.Title + " - " + selectedNote.Content;
+        displayStyle = "display: none;";
+    }
 
     private void SelectNoteTitle(Note selectedNote)
     {
