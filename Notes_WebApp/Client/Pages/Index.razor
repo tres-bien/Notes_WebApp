@@ -47,6 +47,10 @@
     </div>
 </div>
 
+<div class="mt-5">
+    Total Notes: @totalNotes
+</div>
+
 @if (isLoading)
 {
     <p>Loading...</p>
@@ -221,6 +225,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         await LoadNotes();
+        totalNotes = notes.Count;
     }
 
 
