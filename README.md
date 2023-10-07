@@ -9,9 +9,7 @@ A simple web application designed to manage and organize your notes.
 - [Setup and Installation](#setup-and-installation)
 - [Usage](#usage)
 - [Testing](#testing)
-- [Contribute](#contribute)
-- [License](#license)
-- [Contact](#contact)
+- [End-to-End (E2E) Testing](#end-to-end-(e2e)-testing)
 
 ## 🚀 Features
 
