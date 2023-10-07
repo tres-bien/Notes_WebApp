@@ -4,12 +4,12 @@ A simple web application designed to manage and organize your notes.
 
 ## 📌 Table of Contents
 
-- [Features]([features])
-- [Technologies](technologies)
-- [Setup and Installation](setup-and-installation)
-- [Usage](usage)
-- [Testing](testing)
-- [End-to-End (E2E) Testing](end-to-end-(e2e)-testing)
+- [Features](https://github.com/tres-bien/Notes_WebApp#-features)
+- [Technologies](https://github.com/tres-bien/Notes_WebApp#%EF%B8%8F-technologies)
+- [Setup and Installation](https://github.com/tres-bien/Notes_WebApp#-setup-and-installation)
+- [Usage](https://github.com/tres-bien/Notes_WebApp#%EF%B8%8F-usage)
+- [Testing](https://github.com/tres-bien/Notes_WebApp#-testing)
+- [End-to-End (E2E) Testing](https://github.com/tres-bien/Notes_WebApp#-end-to-end-e2e-testing)
 
 ## 🚀 Features
 
