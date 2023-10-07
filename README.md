@@ -4,7 +4,7 @@ A simple web application designed to manage and organize your notes.
 
 ## 📌 Table of Contents
 
-- [Features](#features)
+- [Features](#[features](https://github.com/tres-bien/Notes_WebApp/tree/master#-features))
 - [Technologies](#technologies)
 - [Setup and Installation](#setup-and-installation)
 - [Usage](#usage)
