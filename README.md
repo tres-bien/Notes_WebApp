@@ -34,12 +34,18 @@ A simple web application designed to manage and organize your notes.
 
 1. Clone the repository:
    git clone https://github.com/tres-bien/Notes_WebApp
-2. Move to the project directory:
-   cd Notes-WebApp
-3. Install necessary dependencies:
-   dotnet restore
-4. Run the application:
-   dotnet run --project Notes-WebApp.Server
+2. Move to the project directory
+3. Install necessary dependencies
+4. Update the database connection string:
+
+Open `appsettings.json` in your preferred editor. Locate the `ConnectionStrings` section and modify the `DefaultConnection` value to point to your database instance.
+```json
+"ConnectionStrings": {
+   "DefaultConnection": "Your_Database_Connection_String_Here"
+}
+```
+💡 Note: Ensure your database instance is running and accessible from your development environment.
+5. Run the application
 
 ## 🖥️ Usage
 
