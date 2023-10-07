@@ -124,6 +124,8 @@ else
 </script>
 
 @code {
+    [Inject]
+    private HttpClient? httpClient { get; set; }
     private List<Note> notes = new List<Note>();
     private List<Note> sortedNotes = new List<Note>();
     private Note newNote = new Note();
@@ -131,103 +133,21 @@ else
     private string? errorMessage = null;
     private bool sortByDateAscending = true;
     private bool sortByTitleAscending = true;
-
     private string searchTerm = "";
-
     private List<string> noteTitles = new List<string>();
-
     private List<NoteWithHtml> filteredNotes = new List<NoteWithHtml>();
-
     private int totalNotes;
-
     public class NoteWithHtml
     {
         public string? Html { get; set; }
         public Note? Note { get; set; }
     }
-
     private string displayStyle = "display: none;";
-
     private Note? noteToExpand;
 
-    private void HandleSearchInput(ChangeEventArgs e)
-    {
-        searchTerm = e.Value?.ToString()!;
-        SearchNotes();
-    }
-
-    private string HighlightSearchTerm(string html, string searchTerm)
-    {
-        string highlightedHtml = Regex.Replace(
-            html,
-            Regex.Escape(searchTerm),
-            match => $"<span class=\"highlight\">{match.Value}</span>",
-            RegexOptions.IgnoreCase
-        );
-
-        return highlightedHtml;
-    }
-
-    private void UpdateSearchTerm(string searchTerm)
-    {
-        this.searchTerm = searchTerm;
-        SearchNotes();
-    }
-
-    private void SearchNotes()
-    {
-        StringComparison comparison = StringComparison.OrdinalIgnoreCase;
-
-        filteredNotes = notes
-            .Where(note =>
-                note.Title.IndexOf(searchTerm, comparison) >= 0 ||
-                note.Content.IndexOf(searchTerm, comparison) >= 0)
-            .Select(note => new NoteWithHtml
-                {
-                    Html = $"{note.Title} - {note.Content}",
-                    Note = note
-                })
-            .ToList();
-
-        displayStyle = filteredNotes.Count > 0 ? "display: block;" : "display: none;";
-    }
-
-    private async Task SelectNoteTitleOrContent(Note selectedNote)
-    {
-        searchTerm = "";
-        noteToExpand = selectedNote;
-        displayStyle = "display: none;";
-
-        await JSRuntime.InvokeVoidAsync("scrollToNote", selectedNote.Id);
-
-        ExpandNote(selectedNote);
-    }
-
-    private void ExpandNote(Note selectedNote)
-    {
-        foreach (var note in notes)
-        {
-            if (note == selectedNote)
-            {
-                note.IsExpanded = true;
-            }
-            else
-            {
-                note.IsExpanded = false;
-            }
-        }
-    }
-
-    [Inject]
-    private HttpClient? httpClient { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadNotes();
-        totalNotes = notes.Count;
-    }
-
-
+    /// <summary>
+    /// Loads all notes asynchronously.
+    /// </summary>
     private async Task LoadNotes()
     {
         isLoading = true;
@@ -248,32 +168,9 @@ else
         }
     }
 
-    private void SortByDate()
-    {
-        if (sortByDateAscending)
-        {
-            sortedNotes = sortedNotes.OrderBy(note => note.Date).ToList();
-        }
-        else
-        {
-            sortedNotes = sortedNotes.OrderByDescending(note => note.Date).ToList();
-        }
-        sortByDateAscending = !sortByDateAscending;
-    }
-
-    private void SortByTitle()
-    {
-        if (sortByTitleAscending)
-        {
-            sortedNotes = sortedNotes.OrderBy(note => note.Title).ToList();
-        }
-        else
-        {
-            sortedNotes = sortedNotes.OrderByDescending(note => note.Title).ToList();
-        }
-        sortByTitleAscending = !sortByTitleAscending;
-    }
-
+    /// <summary>
+    /// Creates a new note asynchronously.
+    /// </summary>
     private async Task CreateNote()
     {
         try
@@ -295,6 +192,10 @@ else
         }
     }
 
+    /// <summary>
+    /// Deletes the specified note asynchronously.
+    /// </summary>
+    /// <param name="noteToDelete">The note to be deleted.</param>
     private async Task DeleteNote(Note noteToDelete)
     {
         try
@@ -316,21 +217,172 @@ else
         }
     }
 
+
+    /// <summary>
+    /// Handles input for the search feature.
+    /// </summary>
+    /// <param name="e">Change event arguments.</param>
+    private void HandleSearchInput(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString()!;
+        SearchNotes();
+    }
+
+    /// <summary>
+    /// Highlights the search term within the provided HTML string.
+    /// </summary>
+    /// <param name="html">The HTML content.</param>
+    /// <param name="searchTerm">The search term.</param>
+    /// <returns>The highlighted HTML.</returns>
+    private string HighlightSearchTerm(string html, string searchTerm)
+    {
+        string highlightedHtml = Regex.Replace(
+            html,
+            Regex.Escape(searchTerm),
+            match => $"<span class=\"highlight\">{match.Value}</span>",
+            RegexOptions.IgnoreCase
+        );
+
+        return highlightedHtml;
+    }
+
+    /// <summary>
+    /// Updates the search term and triggers the search.
+    /// </summary>
+    /// <param name="searchTerm">The new search term.</param>
+    private void UpdateSearchTerm(string searchTerm)
+    {
+        this.searchTerm = searchTerm;
+        SearchNotes();
+    }
+
+    /// <summary>
+    /// Filters the notes based on the current search term.
+    /// </summary>
+    private void SearchNotes()
+    {
+        StringComparison comparison = StringComparison.OrdinalIgnoreCase;
+
+        filteredNotes = notes
+            .Where(note =>
+                note.Title.IndexOf(searchTerm, comparison) >= 0 ||
+                note.Content.IndexOf(searchTerm, comparison) >= 0)
+            .Select(note => new NoteWithHtml
+                {
+                    Html = $"{note.Title} - {note.Content}",
+                    Note = note
+                })
+            .ToList();
+
+        displayStyle = filteredNotes.Count > 0 ? "display: block;" : "display: none;";
+    }
+
+    /// <summary>
+    /// Selects and expands the note based on its title or content.
+    /// </summary>
+    /// <param name="selectedNote">The note to be expanded.</param>
+    private async Task SelectNoteTitleOrContent(Note selectedNote)
+    {
+        searchTerm = "";
+        noteToExpand = selectedNote;
+        displayStyle = "display: none;";
+
+        await JSRuntime.InvokeVoidAsync("scrollToNote", selectedNote.Id);
+
+        ExpandNote(selectedNote);
+    }
+
+    /// <summary>
+    /// Expands the selected note while collapsing the others.
+    /// </summary>
+    /// <param name="selectedNote">The note to be expanded.</param>
+    private void ExpandNote(Note selectedNote)
+    {
+        foreach (var note in notes)
+        {
+            if (note == selectedNote)
+            {
+                note.IsExpanded = true;
+            }
+            else
+            {
+                note.IsExpanded = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Initializes the component by loading all notes.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNotes();
+        totalNotes = notes.Count;
+    }
+
+    /// <summary>
+    /// Sorts the notes by date, toggling between ascending and descending order.
+    /// </summary>
+    private void SortByDate()
+    {
+        if (sortByDateAscending)
+        {
+            sortedNotes = sortedNotes.OrderBy(note => note.Date).ToList();
+        }
+        else
+        {
+            sortedNotes = sortedNotes.OrderByDescending(note => note.Date).ToList();
+        }
+        sortByDateAscending = !sortByDateAscending;
+    }
+
+    /// <summary>
+    /// Sorts the notes by title, toggling between ascending and descending order.
+    /// </summary>
+    private void SortByTitle()
+    {
+        if (sortByTitleAscending)
+        {
+            sortedNotes = sortedNotes.OrderBy(note => note.Title).ToList();
+        }
+        else
+        {
+            sortedNotes = sortedNotes.OrderByDescending(note => note.Title).ToList();
+        }
+        sortByTitleAscending = !sortByTitleAscending;
+    }
+
+    /// <summary>
+    /// Toggles the expansion state of the specified note.
+    /// </summary>
+    /// <param name="note">The note whose expansion state is to be toggled.</param>
     private void ToggleExpand(Note note)
     {
         note.IsExpanded = !note.IsExpanded;
     }
 
+    /// <summary>
+    /// Initiates the editing state for the specified note.
+    /// </summary>
+    /// <param name="note">The note to be edited.</param>
     private void StartEdit(Note note)
     {
         note.IsEditing = true;
     }
 
+    /// <summary>
+    /// Cancels the editing state for the specified note.
+    /// </summary>
+    /// <param name="note">The note whose editing is to be canceled.</param>
     private void CancelEdit(Note note)
     {
         note.IsEditing = false;
     }
 
+    /// <summary>
+    /// Applies the changes made to the note by sending an update request to the server.
+    /// </summary>
+    /// <param name="note">The note with changes to be applied.</param>
     private async Task ApplyChanges(Note note)
     {
         try
