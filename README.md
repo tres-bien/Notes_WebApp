@@ -34,14 +34,11 @@ A simple web application designed to manage and organize your notes.
 
 1. Clone the repository:
    git clone https://github.com/tres-bien/Notes_WebApp
-   
-3. Move to the project directory:
+2. Move to the project directory:
    cd Notes-WebApp
-
-5. Install necessary dependencies:
+3. Install necessary dependencies:
    dotnet restore
-
-7. Run the application:
+4. Run the application:
    dotnet run --project Notes-WebApp.Server
 
 ## 🖥️ Usage
@@ -58,3 +55,15 @@ To run the tests:
    
 2. Run the tests:
    dotnet test
+
+## 🌐 End-to-End (E2E) Testing
+
+For comprehensive end-to-end testing, we maintain a separate repository that makes use of Playwright. Follow these steps to run the E2E tests:
+
+1. Clone the E2E testing repository:
+   git clone https://github.com/tres-bien/Notes_E2ETests
+2. Move to the cloned directory:
+   cd Notes_E2ETests
+3. Install the necessary dependencies
+4. Run Notes-WebApp Application
+5. Run the E2E tests
