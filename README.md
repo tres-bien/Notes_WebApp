@@ -4,12 +4,12 @@ A simple web application designed to manage and organize your notes.
 
 ## 📌 Table of Contents
 
-- [Features](#[features])
-- [Technologies](#technologies)
-- [Setup and Installation](#setup-and-installation)
-- [Usage](#usage)
-- [Testing](#testing)
-- [End-to-End (E2E) Testing](#end-to-end-(e2e)-testing)
+- [Features](##[features])
+- [Technologies](##technologies)
+- [Setup and Installation](##setup-and-installation)
+- [Usage](##usage)
+- [Testing](##testing)
+- [End-to-End (E2E) Testing](##end-to-end-(e2e)-testing)
 
 ## 🚀 Features
 
