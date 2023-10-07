@@ -18,6 +18,8 @@ namespace Notes_WebApp
             builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("NotesDb")));
 
+            builder.Services.AddCors();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
